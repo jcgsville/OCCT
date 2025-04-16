@@ -59,7 +59,7 @@ else()
 endif()
 
 if(NOT DEFINED OCCT_SOURCE_DIR)
-    set(OCCT_SOURCE_DIR "${OCCT_SOURCE_DIR}" CACHE PATH "Path to OpenCASCADE source directory")
+    set(OCCT_SOURCE_DIR "${CMAKE_SOURCE_DIR}" CACHE PATH "Path to OpenCASCADE source directory")
 endif()
 # For relative includes() like `include(version)`
 set(CMAKE_MODULE_PATH "${OCCT_SOURCE_DIR}/adm/cmake")
@@ -936,9 +936,13 @@ else()
   set (CSF_TclTkLibs "")
 endif()
 
+if(NOT DEFINED OCCT_BINARY_DIR)
+    set(OCCT_BINARY_DIR "${CMAKE_BINARY_DIR}" CACHE PATH "Path to OpenCASCADE build directory")
+endif()
+
 # Installing the overview documentation
 if (INSTALL_DOC_Overview)
-  install (DIRECTORY "${CMAKE_BINARY_DIR}/doc/overview" DESTINATION  "${INSTALL_DIR_DOC}")
+  install (DIRECTORY "${OCCT_BINARY_DIR}/doc/overview" DESTINATION  "${INSTALL_DIR_DOC}")
 
   # create overview.html only for windows
   if (WIN32 AND "${INSTALL_DIR_LAYOUT}" STREQUAL "Windows")
@@ -960,10 +964,10 @@ if (3RDPARTY_INCLUDE_DIRS)
 endif()
 
 # Ensure the include directory exists
-file(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/${INSTALL_DIR_INCLUDE}")
+file(MAKE_DIRECTORY "${OCCT_BINARY_DIR}/${INSTALL_DIR_INCLUDE}")
 
 # include <cmake binary folder>/inc
-include_directories (${CMAKE_BINARY_DIR}/${INSTALL_DIR_INCLUDE})
+include_directories (${OCCT_BINARY_DIR}/${INSTALL_DIR_INCLUDE})
 
 # check all 3rdparty library paths
 string (REGEX REPLACE ";" " " 3RDPARTY_NO_LIBS "${3RDPARTY_NO_LIBS}")
@@ -989,37 +993,37 @@ endif()
 
 # build directories
 if (SINGLE_GENERATOR)
-  set (CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/${OS_WITH_BIT}/${COMPILER}/lib${BIN_LETTER}")
-  set (CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/${OS_WITH_BIT}/${COMPILER}/bin${BIN_LETTER}")
-  set (CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/${OS_WITH_BIT}/${COMPILER}/lib${BIN_LETTER}")
+  set (CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${OCCT_BINARY_DIR}/${OS_WITH_BIT}/${COMPILER}/lib${BIN_LETTER}")
+  set (CMAKE_RUNTIME_OUTPUT_DIRECTORY "${OCCT_BINARY_DIR}/${OS_WITH_BIT}/${COMPILER}/bin${BIN_LETTER}")
+  set (CMAKE_LIBRARY_OUTPUT_DIRECTORY "${OCCT_BINARY_DIR}/${OS_WITH_BIT}/${COMPILER}/lib${BIN_LETTER}")
   if (WIN32)
-    set (CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/${OS_WITH_BIT}/${COMPILER}/bin${BIN_LETTER}")
+    set (CMAKE_LIBRARY_OUTPUT_DIRECTORY "${OCCT_BINARY_DIR}/${OS_WITH_BIT}/${COMPILER}/bin${BIN_LETTER}")
   endif()
 endif()
 
-set (CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE "${CMAKE_BINARY_DIR}/${OS_WITH_BIT}/${COMPILER}/lib")
-set (CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE "${CMAKE_BINARY_DIR}/${OS_WITH_BIT}/${COMPILER}/bin")
-set (CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE "${CMAKE_BINARY_DIR}/${OS_WITH_BIT}/${COMPILER}/lib")
+set (CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE "${OCCT_BINARY_DIR}/${OS_WITH_BIT}/${COMPILER}/lib")
+set (CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE "${OCCT_BINARY_DIR}/${OS_WITH_BIT}/${COMPILER}/bin")
+set (CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE "${OCCT_BINARY_DIR}/${OS_WITH_BIT}/${COMPILER}/lib")
 
-set (CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELWITHDEBINFO "${CMAKE_BINARY_DIR}/${OS_WITH_BIT}/${COMPILER}/libi")
-set (CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELWITHDEBINFO "${CMAKE_BINARY_DIR}/${OS_WITH_BIT}/${COMPILER}/bini")
-set (CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELWITHDEBINFO "${CMAKE_BINARY_DIR}/${OS_WITH_BIT}/${COMPILER}/libi")
+set (CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELWITHDEBINFO "${OCCT_BINARY_DIR}/${OS_WITH_BIT}/${COMPILER}/libi")
+set (CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELWITHDEBINFO "${OCCT_BINARY_DIR}/${OS_WITH_BIT}/${COMPILER}/bini")
+set (CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELWITHDEBINFO "${OCCT_BINARY_DIR}/${OS_WITH_BIT}/${COMPILER}/libi")
 
-set (CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG "${CMAKE_BINARY_DIR}/${OS_WITH_BIT}/${COMPILER}/libd")
-set (CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG "${CMAKE_BINARY_DIR}/${OS_WITH_BIT}/${COMPILER}/bind")
-set (CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG "${CMAKE_BINARY_DIR}/${OS_WITH_BIT}/${COMPILER}/libd")
+set (CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG "${OCCT_BINARY_DIR}/${OS_WITH_BIT}/${COMPILER}/libd")
+set (CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG "${OCCT_BINARY_DIR}/${OS_WITH_BIT}/${COMPILER}/bind")
+set (CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG "${OCCT_BINARY_DIR}/${OS_WITH_BIT}/${COMPILER}/libd")
 
 if (WIN32)
-  set (CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE        "${CMAKE_BINARY_DIR}/${OS_WITH_BIT}/${COMPILER}/bin")
-  set (CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELWITHDEBINFO "${CMAKE_BINARY_DIR}/${OS_WITH_BIT}/${COMPILER}/bini")
-  set (CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG          "${CMAKE_BINARY_DIR}/${OS_WITH_BIT}/${COMPILER}/bind")
+  set (CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE        "${OCCT_BINARY_DIR}/${OS_WITH_BIT}/${COMPILER}/bin")
+  set (CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELWITHDEBINFO "${OCCT_BINARY_DIR}/${OS_WITH_BIT}/${COMPILER}/bini")
+  set (CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG          "${OCCT_BINARY_DIR}/${OS_WITH_BIT}/${COMPILER}/bind")
 endif()
 
 string(TIMESTAMP CURRENT_TIME "%H:%M:%S")
-message (STATUS "\nInfo: \(${CURRENT_TIME}\) Start collecting all OCCT header files into ${CMAKE_BINARY_DIR}/inc ...")
+message (STATUS "\nInfo: \(${CURRENT_TIME}\) Start collecting all OCCT header files into ${OCCT_BINARY_DIR}/inc ...")
 
 # collect all the headers to <binary dir>/inc folder
-COLLECT_AND_INSTALL_OCCT_HEADER_FILES ("${CMAKE_BINARY_DIR}" "${BUILD_TOOLKITS}" "src" "${INSTALL_DIR_INCLUDE}")
+COLLECT_AND_INSTALL_OCCT_HEADER_FILES ("${OCCT_BINARY_DIR}" "${BUILD_TOOLKITS}" "src" "${INSTALL_DIR_INCLUDE}")
 
 # Create and install Standard_Version.hxx
 CONFIGURE_AND_INSTALL_VERSION_HEADER()
@@ -1043,7 +1047,7 @@ endif()
 # get absolute path from INSTALL_DIR
 set (INSTALL_DIR_ABSOLUTE "${INSTALL_DIR}")
 if(NOT IS_ABSOLUTE "${INSTALL_DIR_ABSOLUTE}")
-  get_filename_component(INSTALL_DIR_ABSOLUTE "${CMAKE_BINARY_DIR}/${INSTALL_DIR}" ABSOLUTE)
+  get_filename_component(INSTALL_DIR_ABSOLUTE "${OCCT_BINARY_DIR}/${INSTALL_DIR}" ABSOLUTE)
 endif()
 
 if (INSTALL_SAMPLES)
@@ -1056,8 +1060,8 @@ if (INSTALL_SAMPLES)
       OCCT_INSTALL_FILE_OR_DIR ("samples/xaml" "${INSTALL_DIR_SAMPLES}")
     endif()
 
-    install (FILES "${CMAKE_BINARY_DIR}/env.samples.${SCRIPT_EXT}" DESTINATION "${INSTALL_DIR_SAMPLES}/CSharp" RENAME "env.${SCRIPT_EXT}")
-    install (FILES "${CMAKE_BINARY_DIR}/env.samples.${SCRIPT_EXT}" DESTINATION "${INSTALL_DIR_SAMPLES}/mfc/standard" RENAME "env.${SCRIPT_EXT}")
+    install (FILES "${OCCT_BINARY_DIR}/env.samples.${SCRIPT_EXT}" DESTINATION "${INSTALL_DIR_SAMPLES}/CSharp" RENAME "env.${SCRIPT_EXT}")
+    install (FILES "${OCCT_BINARY_DIR}/env.samples.${SCRIPT_EXT}" DESTINATION "${INSTALL_DIR_SAMPLES}/mfc/standard" RENAME "env.${SCRIPT_EXT}")
   endif()
 
   OCCT_INSTALL_FILE_OR_DIR ("samples/java" "${INSTALL_DIR_SAMPLES}")
@@ -1065,10 +1069,10 @@ if (INSTALL_SAMPLES)
   OCCT_INSTALL_FILE_OR_DIR ("samples/qt" "${INSTALL_DIR_SAMPLES}")
   OCCT_INSTALL_FILE_OR_DIR ("samples/OCCTOverview/code" "${INSTALL_DIR_SAMPLES}/OCCTOverview")
 
-  install (FILES "${CMAKE_BINARY_DIR}/env.samples.${SCRIPT_EXT}" DESTINATION "${INSTALL_DIR_SAMPLES}/qt/FuncDemo" RENAME "env.${SCRIPT_EXT}")
-  install (FILES "${CMAKE_BINARY_DIR}/env.samples.${SCRIPT_EXT}" DESTINATION "${INSTALL_DIR_SAMPLES}/qt/IESample" RENAME "env.${SCRIPT_EXT}")
-  install (FILES "${CMAKE_BINARY_DIR}/env.samples.${SCRIPT_EXT}" DESTINATION "${INSTALL_DIR_SAMPLES}/qt/OCCTOverview" RENAME "env.${SCRIPT_EXT}")
-  install (FILES "${CMAKE_BINARY_DIR}/env.samples.${SCRIPT_EXT}" DESTINATION "${INSTALL_DIR_SAMPLES}/qt/Tutorial" RENAME "env.${SCRIPT_EXT}")
+  install (FILES "${OCCT_BINARY_DIR}/env.samples.${SCRIPT_EXT}" DESTINATION "${INSTALL_DIR_SAMPLES}/qt/FuncDemo" RENAME "env.${SCRIPT_EXT}")
+  install (FILES "${OCCT_BINARY_DIR}/env.samples.${SCRIPT_EXT}" DESTINATION "${INSTALL_DIR_SAMPLES}/qt/IESample" RENAME "env.${SCRIPT_EXT}")
+  install (FILES "${OCCT_BINARY_DIR}/env.samples.${SCRIPT_EXT}" DESTINATION "${INSTALL_DIR_SAMPLES}/qt/OCCTOverview" RENAME "env.${SCRIPT_EXT}")
+  install (FILES "${OCCT_BINARY_DIR}/env.samples.${SCRIPT_EXT}" DESTINATION "${INSTALL_DIR_SAMPLES}/qt/Tutorial" RENAME "env.${SCRIPT_EXT}")
 endif()
 
 if (INSTALL_TEST_CASES)
@@ -1085,7 +1089,7 @@ if (${DRAWEXE_INDEX} GREATER -1)
           PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
 
   # copy draw script to CMake binary folder
-  OCCT_COPY_FILE_OR_DIR ("adm/templates/draw.${SCRIPT_EXT}" "${CMAKE_BINARY_DIR}")
+  OCCT_COPY_FILE_OR_DIR ("adm/templates/draw.${SCRIPT_EXT}" "${OCCT_BINARY_DIR}")
 endif()
 
 set (SUB_CUSTOM_NAME "custom_${COMPILER}_${COMPILER_BITNESS}.${SCRIPT_EXT}")
@@ -1097,7 +1101,7 @@ else()
 endif()
 
 # validating custom.bat/sh for changes
-if (EXISTS "${CMAKE_BINARY_DIR}/custom.${SCRIPT_EXT}" AND EXISTS "${INSTALL_DIR}/${INSTALL_DIR_SCRIPT}/custom.${SCRIPT_EXT}")
+if (EXISTS "${OCCT_BINARY_DIR}/custom.${SCRIPT_EXT}" AND EXISTS "${INSTALL_DIR}/${INSTALL_DIR_SCRIPT}/custom.${SCRIPT_EXT}")
   file (READ "${INSTALL_DIR}/${INSTALL_DIR_SCRIPT}/custom.${SCRIPT_EXT}" CUSTOM_CONTENT)
   string(FIND "${CUSTOM_CONTENT}" "${ADDITIONAL_CUSTOM_CONTENT}" pos)
   if (pos EQUAL -1)
@@ -1133,17 +1137,17 @@ OCCT_CONFIGURE ("adm/templates/custom.build.${SCRIPT_EXT}.in" "${SUB_CUSTOM_NAME
 
 if (BUILD_SAMPLES_MFC OR BUILD_SAMPLES_QT)
   OCCT_INSTALL_FILE_OR_DIR ("adm/templates/sample.${SCRIPT_EXT}" "${INSTALL_DIR_SCRIPT}")
-  OCCT_COPY_FILE_OR_DIR    ("adm/templates/sample.${SCRIPT_EXT}" "${CMAKE_BINARY_DIR}")
+  OCCT_COPY_FILE_OR_DIR    ("adm/templates/sample.${SCRIPT_EXT}" "${OCCT_BINARY_DIR}")
 endif()
 
 if (WIN32)
   # env script for draw in building environment
   OCCT_CONFIGURE ("adm/templates/env.${SCRIPT_EXT}.in" "env.${SCRIPT_EXT}")
   # install env script
-  install (FILES "${CMAKE_BINARY_DIR}/env.${SCRIPT_EXT}" DESTINATION "${INSTALL_DIR_SCRIPT}")
+  install (FILES "${OCCT_BINARY_DIR}/env.${SCRIPT_EXT}" DESTINATION "${INSTALL_DIR_SCRIPT}")
   # copy build.bat and install.bat scripts to CMake binary folder
-  OCCT_COPY_FILE_OR_DIR ("adm/templates/build.bat" "${CMAKE_BINARY_DIR}")
-  OCCT_COPY_FILE_OR_DIR ("adm/templates/install.bat" "${CMAKE_BINARY_DIR}")
+  OCCT_COPY_FILE_OR_DIR ("adm/templates/build.bat" "${OCCT_BINARY_DIR}")
+  OCCT_COPY_FILE_OR_DIR ("adm/templates/install.bat" "${OCCT_BINARY_DIR}")
 else()
   set (SUB_ENV_NAME "env.${SCRIPT_EXT}")
   set (SUB_ENV_BUILD_NAME "env.install.${SCRIPT_EXT}")
@@ -1154,8 +1158,8 @@ else()
 endif()
 
 # copy DrawAppliInit from OCCT source to build directory
-if (NOT EXISTS "${CMAKE_BINARY_DIR}/DrawAppliInit")
-  OCCT_COPY_FILE_OR_DIR (DrawAppliInit "${CMAKE_BINARY_DIR}")
+if (NOT EXISTS "${OCCT_BINARY_DIR}/DrawAppliInit")
+  OCCT_COPY_FILE_OR_DIR (DrawAppliInit "${OCCT_BINARY_DIR}")
 endif()
 
 # RESOURCES
@@ -1244,7 +1248,7 @@ if (MSVC AND 3RDPARTY_DLL_DIRS)
       set (X_COMPILER_BITNESS "Win32")
     endif()
 
-    OCCT_CONFIGURE ("adm/templates/DRAWEXE.vcxproj.user.in" "${CMAKE_BINARY_DIR}/src/Draw/DRAWEXE/DRAWEXE.vcxproj.user")
+    OCCT_CONFIGURE ("adm/templates/DRAWEXE.vcxproj.user.in" "${OCCT_BINARY_DIR}/src/Draw/DRAWEXE/DRAWEXE.vcxproj.user")
   endif()
 endif()
 
@@ -1345,7 +1349,7 @@ foreach (OCCT_CONFIGURATION ${CMAKE_CONFIGURATION_TYPES})
 endforeach()
 # install OpenCASCADE config file with compile definitions and C/C++ flags ONLY for current configuration
 install (CODE "string (TOLOWER \"\${CMAKE_INSTALL_CONFIG_NAME}\" CMAKE_INSTALL_CONFIG_NAME_LOWER)")
-install (CODE "file(INSTALL FILES \"${CMAKE_BINARY_DIR}/OpenCASCADECompileDefinitionsAndFlags-\${CMAKE_INSTALL_CONFIG_NAME_LOWER}.cmake\" DESTINATION \"${INSTALL_DIR}/${INSTALL_DIR_CMAKE}/\" TYPE FILE)")
+install (CODE "file(INSTALL FILES \"${OCCT_BINARY_DIR}/OpenCASCADECompileDefinitionsAndFlags-\${CMAKE_INSTALL_CONFIG_NAME_LOWER}.cmake\" DESTINATION \"${INSTALL_DIR}/${INSTALL_DIR_CMAKE}/\" TYPE FILE)")
 
 foreach (OCCT_MODULE ${OCCT_MODULES})
   if (BUILD_MODULE_${OCCT_MODULE})
@@ -1361,7 +1365,7 @@ endforeach()
 set (OCCT_MODULES_ENABLED ${OCCT_MODULES_ENABLED_SORTED})
 
 # Add all targets to the build-tree export set
-export (TARGETS ${OCCT_LIBRARIES} FILE "${CMAKE_BINARY_DIR}/OpenCASCADETargets.cmake")
+export (TARGETS ${OCCT_LIBRARIES} FILE "${OCCT_BINARY_DIR}/OpenCASCADETargets.cmake")
 
 # Export the package for use from the build-tree
 # (this registers the build-tree with a global CMake-registry)
@@ -1386,16 +1390,16 @@ endif()
 
 # Configure and install cmake config file
 configure_file("${OCCT_SOURCE_DIR}/adm/templates/OpenCASCADEConfig.cmake.in" "OpenCASCADEConfig.cmake" @ONLY)
-install(FILES "${CMAKE_BINARY_DIR}/OpenCASCADEConfig.cmake" DESTINATION  "${INSTALL_DIR_CMAKE}")
+install(FILES "${OCCT_BINARY_DIR}/OpenCASCADEConfig.cmake" DESTINATION  "${INSTALL_DIR_CMAKE}")
 
 # Configure cmake version file
 include(CMakePackageConfigHelpers)
-write_basic_package_version_file( ${CMAKE_BINARY_DIR}/OpenCASCADEConfigVersion.cmake
+write_basic_package_version_file( ${OCCT_BINARY_DIR}/OpenCASCADEConfigVersion.cmake
                                   VERSION ${OCC_VERSION_MAJOR}.${OCC_VERSION_MINOR}.${OCC_VERSION_MAINTENANCE}
                                   COMPATIBILITY ExactVersion )
 
 # Install cmake version file
-install (FILES "${CMAKE_BINARY_DIR}/OpenCASCADEConfigVersion.cmake" DESTINATION "${INSTALL_DIR_CMAKE}")
+install (FILES "${OCCT_BINARY_DIR}/OpenCASCADEConfigVersion.cmake" DESTINATION "${INSTALL_DIR_CMAKE}")
 
 # Install the export set for use with the install-tree for each configuration
 foreach (OCCT_MODULE ${OCCT_MODULES_ENABLED})
