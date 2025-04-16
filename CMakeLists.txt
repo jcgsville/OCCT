@@ -58,7 +58,10 @@ else()
   PROJECT (OCCT)
 endif()
 
-set (CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/adm/cmake")
+if(NOT DEFINED OCCT_SOURCE_DIR)
+    set(OCCT_SOURCE_DIR "${CMAKE_SOURCE_DIR}" CACHE PATH "Path to OpenCASCADE source directory")
+endif()
+set(CMAKE_MODULE_PATH "${OCCT_SOURCE_DIR}/adm/cmake")
 
 set (CMAKE_SUPPRESS_REGENERATION TRUE)
 
