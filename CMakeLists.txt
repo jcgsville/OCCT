@@ -31,7 +31,7 @@ if (BUILD_USE_VCPKG)
     message(FATAL_ERROR "VCPKG_ROOT is not defined. Please set it to the path of vcpkg root directory.")
   endif()
 
-  set (VCPKG_MANIFEST_DIR "${CMAKE_SOURCE_DIR}/adm/vcpkg")
+  set (VCPKG_MANIFEST_DIR "${CMAKE_CURRENT_SOURCE_DIR}/adm/vcpkg")
 
   # Disable default features for vcpkg manifest
   set (VCPKG_MANIFEST_NO_DEFAULT_FEATURES 1)
@@ -58,7 +58,7 @@ else()
   PROJECT (OCCT)
 endif()
 
-set (CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/adm/cmake")
+set (CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/adm/cmake")
 
 set (CMAKE_SUPPRESS_REGENERATION TRUE)
 
@@ -92,7 +92,7 @@ set (CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # include cmake file
 macro (OCCT_INCLUDE_CMAKE_FILE BEING_INCLUDED_FILE)
-  include (${CMAKE_SOURCE_DIR}/${BEING_INCLUDED_FILE}.cmake)
+  include (${CMAKE_CURRENT_SOURCE_DIR}/${BEING_INCLUDED_FILE}.cmake)
 endmacro()
 
 # set using memory manager option for TKernel
@@ -779,7 +779,7 @@ if (BUILD_USE_VCPKG)
 endif()
 
 # copying clang-format file to the root of the project
-file(COPY ${CMAKE_SOURCE_DIR}/.clang-format DESTINATION ${CMAKE_SOURCE_DIR})
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/.clang-format DESTINATION ${CMAKE_CURRENT_SOURCE_DIR})
 
 # Get all used variables: OS_WITH_BIT, COMPILER
 OCCT_MAKE_OS_WITH_BITNESS()
@@ -1077,7 +1077,7 @@ if (${DRAWEXE_INDEX} GREATER -1)
   OCCT_INSTALL_FILE_OR_DIR ("data/" "${INSTALL_DIR_DATA}")
   OCCT_INSTALL_FILE_OR_DIR ("samples/tcl" "${INSTALL_DIR_SAMPLES}")
 
-  install (FILES "${CMAKE_SOURCE_DIR}/adm/templates/draw.${SCRIPT_EXT}" DESTINATION  "${INSTALL_DIR_SCRIPT}"
+  install (FILES "${CMAKE_CURRENT_SOURCE_DIR}/adm/templates/draw.${SCRIPT_EXT}" DESTINATION  "${INSTALL_DIR_SCRIPT}"
           PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
 
   # copy draw script to CMake binary folder
@@ -1247,7 +1247,7 @@ endif()
 message (STATUS "Info: \(${CURRENT_TIME}\) OCCT toolkits processed")
 # samples do not support patch usage
 if (BUILD_SAMPLES_MFC OR BUILD_SAMPLES_QT)
-  set (OCCT_ROOT ${CMAKE_SOURCE_DIR})
+  set (OCCT_ROOT ${CMAKE_CURRENT_SOURCE_DIR})
 endif()
 
 if (BUILD_SAMPLES_MFC)
@@ -1337,7 +1337,7 @@ foreach (OCCT_CONFIGURATION ${CMAKE_CONFIGURATION_TYPES})
   endforeach()
   set (SET_OpenCASCADE_CMAKE_C_FLAGS "${CMAKE_C_FLAGS_${OCCT_CONFIGURATION_UPPER}}")
   set (SET_OpenCASCADE_CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS_${OCCT_CONFIGURATION_UPPER}}")
-  configure_file("${CMAKE_SOURCE_DIR}/adm/templates/OpenCASCADECompileDefinitionsAndFlags.cmake.in" "OpenCASCADECompileDefinitionsAndFlags-${OCCT_CONFIGURATION_LOWER}.cmake" @ONLY)
+  configure_file("${CMAKE_CURRENT_SOURCE_DIR}/adm/templates/OpenCASCADECompileDefinitionsAndFlags.cmake.in" "OpenCASCADECompileDefinitionsAndFlags-${OCCT_CONFIGURATION_LOWER}.cmake" @ONLY)
 endforeach()
 # install OpenCASCADE config file with compile definitions and C/C++ flags ONLY for current configuration
 install (CODE "string (TOLOWER \"\${CMAKE_INSTALL_CONFIG_NAME}\" CMAKE_INSTALL_CONFIG_NAME_LOWER)")
@@ -1381,7 +1381,7 @@ if (APPLE)
 endif()
 
 # Configure and install cmake config file
-configure_file("${CMAKE_SOURCE_DIR}/adm/templates/OpenCASCADEConfig.cmake.in" "OpenCASCADEConfig.cmake" @ONLY)
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/adm/templates/OpenCASCADEConfig.cmake.in" "OpenCASCADEConfig.cmake" @ONLY)
 install(FILES "${CMAKE_BINARY_DIR}/OpenCASCADEConfig.cmake" DESTINATION  "${INSTALL_DIR_CMAKE}")
 
 # Configure cmake version file
